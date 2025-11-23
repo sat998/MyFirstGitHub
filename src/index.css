@@ -260,6 +260,43 @@ button {
   .glass-panel {
     padding: 24px !important;
   }
+
+  /* Mobile Navigation */
+  header {
+    padding: 0 12px !important;
+  }
+
+  header .glass-panel {
+    padding: 0 20px !important;
+    height: auto !important;
+    min-height: 60px;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .logo {
+    font-size: 1.2rem !important;
+  }
+
+  .logo span:first-child {
+    font-size: 1.5rem !important;
+  }
+
+  .logo div span {
+    font-size: 0.65rem !important;
+  }
+
+  .nav ul {
+    gap: 20px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav ul li a {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -277,5 +314,18 @@ button {
 
   .container {
     padding: 0 12px;
+  }
+
+  /* Extra small screens */
+  .nav ul {
+    gap: 12px !important;
+  }
+
+  .nav ul li a {
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1rem !important;
   }
 }

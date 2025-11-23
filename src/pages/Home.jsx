@@ -6,7 +6,7 @@ const Home = () => {
         <div className="home-page">
             {/* Hero Section */}
             <section style={{
-                padding: '180px 0 120px',
+                padding: 'clamp(80px, 15vw, 180px) 0 clamp(60px, 10vw, 120px)',
                 position: 'relative',
                 overflow: 'hidden'
             }}>
@@ -45,7 +45,7 @@ const Home = () => {
                         </h1>
 
                         <p className="animate-slide-up delay-200" style={{
-                            fontSize: '1.25rem',
+                            fontSize: 'clamp(1rem, 2vw, 1.25rem)',
                             color: 'var(--text-secondary)',
                             marginBottom: '40px',
                             lineHeight: '1.8'
@@ -54,11 +54,11 @@ const Home = () => {
                             Dr. Kalicharan P brings years of experience to ensure the best health for you and your children.
                         </p>
 
-                        <div className="animate-slide-up delay-300" style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                            <Link to="/contact" className="btn btn-primary" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>
+                        <div className="animate-slide-up delay-300" style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Link to="/contact" className="btn btn-primary" style={{ padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 40px)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
                                 Book Appointment
                             </Link>
-                            <Link to="/services" className="btn btn-secondary" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>
+                            <Link to="/services" className="btn btn-secondary" style={{ padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 40px)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
                                 View Services
                             </Link>
                         </div>
@@ -69,7 +69,7 @@ const Home = () => {
             {/* Features Section */}
             <section className="section-padding">
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(20px, 4vw, 40px)' }}>
 
                         <div className="glass-panel animate-slide-up delay-100" style={{ padding: '40px', transition: 'transform 0.3s ease' }}>
                             <div style={{
