@@ -1,18 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isClinicOpen } from '../utils/holidays';
+import { db } from '../utils/firebase';
+import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
+
+const TIME_SLOTS = [
+    '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+    '12:00 PM', '12:30 PM', '04:00 PM', '04:30 PM',
+    '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM'
+];
 
 const AppointmentScheduler = () => {
     const [date, setDate] = useState('');
-    const [status, setStatus] = useState(null); // { isOpen: boolean, reason: string }
+    const [status, setStatus] = useState(null);
     const [formData, setFormData] = useState({ name: '', phone: '', reason: '' });
     const [submitted, setSubmitted] = useState(false);
+    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [bookedSlots, setBookedSlots] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (date) {
+            // Real-time listener for booked slots
+            const q = query(collection(db, "appointments"), where("date", "==", date));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const slots = [];
+                querySnapshot.forEach((doc) => {
+                    slots.push(doc.data().slot);
+                });
+                setBookedSlots(slots);
+            }, (error) => {
+                console.error("Error fetching slots:", error);
+                // Fallback for demo if Firebase isn't configured
+                setBookedSlots([]);
+            });
+            return () => unsubscribe();
+        }
+    }, [date]);
 
     const handleDateChange = (e) => {
         const selectedDate = e.target.value;
         setDate(selectedDate);
+        setSelectedSlot(null);
 
         if (selectedDate) {
-            // Append time to ensure it's treated as local date, avoiding timezone shifts
             const dateObj = new Date(selectedDate + 'T00:00:00');
             const clinicStatus = isClinicOpen(dateObj);
             setStatus(clinicStatus);
@@ -21,11 +52,41 @@ const AppointmentScheduler = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Mock submission
-        console.log('Appointment booked:', { date, ...formData });
-        setSubmitted(true);
+        setLoading(true);
+
+        try {
+            // 1. Save to Firebase
+            await addDoc(collection(db, "appointments"), {
+                date,
+                slot: selectedSlot,
+                ...formData,
+                createdAt: new Date()
+            });
+
+            // 2. Send Email via EmailJS
+            // Replace with your Service ID, Template ID, and Public Key
+            await emailjs.send(
+                'service_2ptkq4x',
+                'template_yk6ftoh',
+                {
+                    to_name: 'Dr. Kalicharan P',
+                    from_name: formData.name,
+                    message: `New appointment request for ${date} at ${selectedSlot}. \nPhone: ${formData.phone} \nReason: ${formData.reason}`,
+                    reply_to: 'sat998@gmail.com'
+                },
+                '4MX1QNdStuiJl3xZ7'
+            );
+
+            console.log('Appointment booked:', { date, slot: selectedSlot, ...formData });
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Error booking appointment:", error);
+            alert("There was an error booking your appointment. Please check your connection or try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (submitted) {
@@ -34,9 +95,14 @@ const AppointmentScheduler = () => {
                 <div style={{ fontSize: '4rem', marginBottom: '20px' }}>✅</div>
                 <h3 className="heading-md" style={{ color: 'var(--success-color)' }}>Request Sent!</h3>
                 <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '30px' }}>
-                    We will contact you shortly to confirm your visit on <br /><strong>{date}</strong>.
+                    We will contact you shortly to confirm your visit on <br /><strong>{date} at {selectedSlot}</strong>.
                 </p>
-                <button className="btn btn-primary" onClick={() => setSubmitted(false)}>Book Another</button>
+                <button className="btn btn-primary" onClick={() => {
+                    setSubmitted(false);
+                    setFormData({ name: '', phone: '', reason: '' });
+                    setDate('');
+                    setSelectedSlot(null);
+                }}>Book Another</button>
             </div>
         );
     }
@@ -44,7 +110,7 @@ const AppointmentScheduler = () => {
     return (
         <div className="glass-panel animate-slide-up" style={{ padding: '40px' }}>
             <h2 className="heading-md" style={{ color: 'var(--primary-color)', fontSize: '2rem' }}>Book Appointment</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>Select a date and fill in your details.</p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>Select a date and time slot.</p>
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ marginBottom: '24px' }}>
@@ -87,22 +153,43 @@ const AppointmentScheduler = () => {
                             <span>⛔</span> Clinic is closed: {status.reason}
                         </div>
                     )}
-                    {status && status.isOpen && (
-                        <div id="clinic-status-open" className="animate-fade-in" style={{
-                            color: 'var(--success-color)',
-                            marginTop: '12px',
-                            fontSize: '0.9rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            backgroundColor: '#f0fdf4',
-                            padding: '10px',
-                            borderRadius: '8px'
-                        }}>
-                            <span>✅</span> Available
-                        </div>
-                    )}
                 </div>
+
+                {status && status.isOpen && (
+                    <div className="form-group animate-fade-in" style={{ marginBottom: '24px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            Available Slots
+                        </label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px' }}>
+                            {TIME_SLOTS.map((slot) => {
+                                const isBooked = bookedSlots.includes(slot);
+                                const isSelected = selectedSlot === slot;
+                                return (
+                                    <button
+                                        key={slot}
+                                        type="button"
+                                        disabled={isBooked}
+                                        onClick={() => setSelectedSlot(slot)}
+                                        style={{
+                                            padding: '10px',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--primary-color)' : '1px solid #e5e7eb',
+                                            backgroundColor: isSelected ? 'var(--primary-light)' : (isBooked ? '#f3f4f6' : 'white'),
+                                            color: isSelected ? 'var(--primary-dark)' : (isBooked ? '#9ca3af' : 'var(--text-primary)'),
+                                            cursor: isBooked ? 'not-allowed' : 'pointer',
+                                            opacity: isBooked ? 0.6 : 1,
+                                            fontWeight: isSelected ? '600' : 'normal',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {slot}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {selectedSlot && <p style={{ marginTop: '10px', fontSize: '0.9rem', color: 'var(--primary-color)' }}>Selected: <strong>{selectedSlot}</strong></p>}
+                    </div>
+                )}
 
                 <div className="form-group" style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -190,9 +277,9 @@ const AppointmentScheduler = () => {
                     type="submit"
                     className="btn btn-primary"
                     style={{ width: '100%', fontSize: '1.1rem' }}
-                    disabled={!date || (status && !status.isOpen)}
+                    disabled={!date || (status && !status.isOpen) || !selectedSlot || loading}
                 >
-                    Confirm Appointment
+                    {loading ? 'Processing...' : 'Confirm Appointment'}
                 </button>
             </form>
         </div>
