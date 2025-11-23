@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { isClinicOpen } from '../utils/holidays';
+import { isClinicOpen, CLINIC_LOCATIONS } from '../utils/holidays';
 import { db } from '../utils/firebase';
 import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
@@ -11,6 +11,7 @@ const TIME_SLOTS = [
 ];
 
 const AppointmentScheduler = () => {
+    const [location, setLocation] = useState('');
     const [date, setDate] = useState('');
     const [status, setStatus] = useState(null);
     const [formData, setFormData] = useState({ name: '', phone: '', reason: '' });
@@ -20,9 +21,13 @@ const AppointmentScheduler = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (date) {
-            // Real-time listener for booked slots
-            const q = query(collection(db, "appointments"), where("date", "==", date));
+        if (date && location) {
+            // Real-time listener for booked slots (filtered by date AND location)
+            const q = query(
+                collection(db, "appointments"),
+                where("date", "==", date),
+                where("location", "==", location)
+            );
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 const slots = [];
                 querySnapshot.forEach((doc) => {
@@ -36,20 +41,28 @@ const AppointmentScheduler = () => {
             });
             return () => unsubscribe();
         }
-    }, [date]);
+    }, [date, location]);
 
     const handleDateChange = (e) => {
         const selectedDate = e.target.value;
         setDate(selectedDate);
         setSelectedSlot(null);
 
-        if (selectedDate) {
+        if (selectedDate && location) {
             const dateObj = new Date(selectedDate + 'T00:00:00');
-            const clinicStatus = isClinicOpen(dateObj);
+            const clinicStatus = isClinicOpen(dateObj, location);
             setStatus(clinicStatus);
         } else {
             setStatus(null);
         }
+    };
+
+    const handleLocationChange = (e) => {
+        const selectedLocation = e.target.value;
+        setLocation(selectedLocation);
+        setDate('');
+        setSelectedSlot(null);
+        setStatus(null);
     };
 
     const handleSubmit = async (e) => {
@@ -60,20 +73,21 @@ const AppointmentScheduler = () => {
             // 1. Save to Firebase
             await addDoc(collection(db, "appointments"), {
                 date,
+                location,
                 slot: selectedSlot,
                 ...formData,
                 createdAt: new Date()
             });
 
             // 2. Send Email via EmailJS
-            // Replace with your Service ID, Template ID, and Public Key
+            const locationName = CLINIC_LOCATIONS[location]?.name || location;
             await emailjs.send(
                 'service_2ptkq4x',
                 'template_yk6ftoh',
                 {
                     to_name: 'Dr. Kalicharan P',
                     from_name: formData.name,
-                    message: `New appointment request for ${date} at ${selectedSlot}. \nPhone: ${formData.phone} \nReason: ${formData.reason}`,
+                    message: `New appointment request\n\nLocation: ${locationName}\nDate: ${date}\nTime: ${selectedSlot}\nPhone: ${formData.phone}\nReason: ${formData.reason}`,
                     reply_to: 'sat998@gmail.com'
                 },
                 '4MX1QNdStuiJl3xZ7'
@@ -95,11 +109,12 @@ const AppointmentScheduler = () => {
                 <div style={{ fontSize: '4rem', marginBottom: '20px' }}>✅</div>
                 <h3 className="heading-md" style={{ color: 'var(--success-color)' }}>Request Sent!</h3>
                 <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '30px' }}>
-                    We will contact you shortly to confirm your visit on <br /><strong>{date} at {selectedSlot}</strong>.
+                    We will contact you shortly to confirm your visit at<br /><strong>{CLINIC_LOCATIONS[location]?.name} clinic</strong><br />on <strong>{date} at {selectedSlot}</strong>.
                 </p>
                 <button className="btn btn-primary" onClick={() => {
                     setSubmitted(false);
                     setFormData({ name: '', phone: '', reason: '' });
+                    setLocation('');
                     setDate('');
                     setSelectedSlot(null);
                 }}>Book Another</button>
@@ -115,6 +130,36 @@ const AppointmentScheduler = () => {
             <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Select Clinic Location
+                    </label>
+                    <select
+                        id="clinic-location"
+                        value={location}
+                        onChange={handleLocationChange}
+                        style={{
+                            width: '100%',
+                            padding: '16px',
+                            borderRadius: 'var(--radius-md)',
+                            border: '2px solid transparent',
+                            backgroundColor: 'rgba(255,255,255,0.8)',
+                            fontSize: '1rem',
+                            transition: 'all 0.3s ease',
+                            outline: 'none',
+                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                            cursor: 'pointer'
+                        }}
+                        onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                        onBlur={(e) => e.target.style.borderColor = 'transparent'}
+                        required
+                    >
+                        <option value="">-- Choose Location --</option>
+                        <option value="SALEM">Salem (Mon-Wed)</option>
+                        <option value="ATTUR">Attur (Thu-Sat)</option>
+                    </select>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Select Date
                     </label>
                     <input
@@ -123,6 +168,7 @@ const AppointmentScheduler = () => {
                         value={date}
                         onChange={handleDateChange}
                         min={new Date().toISOString().split('T')[0]}
+                        disabled={!location}
                         style={{
                             width: '100%',
                             padding: '16px',
