@@ -311,6 +311,10 @@ button {
 
   .mobile-menu-btn {
     display: block !important;
+    position: absolute !important;
+    right: 20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
   }
 }
 
