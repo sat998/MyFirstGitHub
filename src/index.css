@@ -297,6 +297,15 @@ button {
   .nav ul li a {
     font-size: 0.9rem;
   }
+
+  /* Show hamburger, hide desktop nav on mobile */
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: block !important;
+  }
 }
 
 @media (max-width: 480px) {

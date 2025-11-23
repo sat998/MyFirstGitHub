@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const Layout = () => {
     const location = useLocation();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setMobileMenuOpen(!mobileMenuOpen);
+    };
+
+    const closeMobileMenu = () => {
+        setMobileMenuOpen(false);
+    };
 
     return (
         <div className="layout">
@@ -30,7 +39,9 @@ const Layout = () => {
                             </span>
                         </div>
                     </div>
-                    <nav className="nav">
+
+                    {/* Desktop Navigation */}
+                    <nav className="nav desktop-nav">
                         <ul style={{ display: 'flex', gap: '40px', listStyle: 'none', alignItems: 'center' }}>
                             {['Home', 'About', 'Services', 'Contact'].map((item) => {
                                 const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
@@ -61,54 +72,154 @@ const Layout = () => {
                                     </li>
                                 );
                             })}
-                            <li>
-                                <Link to="/contact" className="btn btn-primary" style={{ padding: '10px 24px' }}>
-                                    Book Now
-                                </Link>
-                            </li>
                         </ul>
                     </nav>
+
+                    {/* Mobile Hamburger Button */}
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={toggleMobileMenu}
+                        style={{
+                            display: 'none',
+                            background: 'none',
+                            border: 'none',
+                            fontSize: '1.8rem',
+                            cursor: 'pointer',
+                            color: 'var(--primary-color)',
+                            padding: '8px'
+                        }}
+                        aria-label="Toggle menu"
+                    >
+                        {mobileMenuOpen ? '✕' : '☰'}
+                    </button>
                 </div>
             </header>
 
-            <main style={{ minHeight: '80vh' }}>
+            {/* Mobile Sidebar Menu */}
+            <div
+                className="mobile-sidebar"
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    right: mobileMenuOpen ? 0 : '-100%',
+                    width: '280px',
+                    height: '100vh',
+                    background: 'linear-gradient(135deg, var(--primary-color), var(--primary-dark))',
+                    zIndex: 1000,
+                    transition: 'right 0.3s ease-in-out',
+                    padding: '80px 30px 30px',
+                    boxShadow: mobileMenuOpen ? '-4px 0 20px rgba(0,0,0,0.2)' : 'none'
+                }}
+            >
+                <button
+                    onClick={closeMobileMenu}
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        right: '20px',
+                        background: 'rgba(255,255,255,0.2)',
+                        border: 'none',
+                        fontSize: '1.5rem',
+                        cursor: 'pointer',
+                        color: 'white',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    ✕
+                </button>
+                <nav>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {['Home', 'About', 'Services', 'Contact'].map((item) => {
+                            const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
+                            const isActive = location.pathname === path;
+                            return (
+                                <li key={item} style={{ marginBottom: '20px' }}>
+                                    <Link
+                                        to={path}
+                                        onClick={closeMobileMenu}
+                                        style={{
+                                            display: 'block',
+                                            padding: '15px 20px',
+                                            color: 'white',
+                                            fontWeight: '600',
+                                            fontSize: '1.1rem',
+                                            backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
+                                            borderRadius: '12px',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {item}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            </div>
+
+            {/* Overlay */}
+            {mobileMenuOpen && (
+                <div
+                    onClick={closeMobileMenu}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        zIndex: 999,
+                        transition: 'opacity 0.3s ease'
+                    }}
+                />
+            )}
+
+            <main>
                 <Outlet />
             </main>
 
             <footer style={{
-                backgroundColor: '#111827',
+                backgroundColor: '#1f2937',
                 color: 'white',
-                padding: '80px 0 40px',
-                marginTop: '120px',
-                borderTopLeftRadius: '60px',
-                borderTopRightRadius: '60px'
+                padding: '60px 0 30px',
+                marginTop: '100px'
             }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '60px', marginBottom: '60px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px', marginBottom: '40px' }}>
                         <div>
                             <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary-light)' }}>Dr. Kalicharan P</h3>
                             <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
-                                Providing world-class respiratory and pediatric care with a compassionate touch. Your health is our priority.
+                                Providing expert Pulmonology and Pediatric care in Salem, Tamil Nadu.
                             </p>
                         </div>
                         <div>
-                            <h4 style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '600' }}>Quick Links</h4>
-                            <ul style={{ listStyle: 'none', color: '#d1d5db', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                <li><Link to="/">Home</Link></li>
-                                <li><Link to="/about">About Us</Link></li>
-                                <li><Link to="/services">Services</Link></li>
-                                <li><Link to="/contact">Book Appointment</Link></li>
+                            <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Quick Links</h4>
+                            <ul style={{ listStyle: 'none', padding: 0 }}>
+                                {['Home', 'About', 'Services', 'Contact'].map(item => (
+                                    <li key={item} style={{ marginBottom: '10px' }}>
+                                        <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} style={{ color: '#9ca3af' }}>
+                                            {item}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                         <div>
-                            <h4 style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '600' }}>Contact Info</h4>
-                            <p style={{ color: '#d1d5db', marginBottom: '10px' }}>123 Health Avenue, Salem, Tamil Nadu</p>
-                            <p style={{ color: '#d1d5db', marginBottom: '10px' }}>+91 98765 43210</p>
-                            <p style={{ color: '#d1d5db' }}>contact@drkalicharanpclinic.com</p>
+                            <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Contact</h4>
+                            <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
+                                📍 Salem, Tamil Nadu<br />
+                                📧 drkalicharan@clinic.com<br />
+                                📞 +91 98765 43210
+                            </p>
                         </div>
                     </div>
-                    <div style={{ borderTop: '1px solid #374151', paddingTop: '40px', textAlign: 'center', color: '#6b7280' }}>
-                        <p>&copy; {new Date().getFullYear()} Dr. Kalicharan P Clinic. All rights reserved.</p>
+                    <div style={{ borderTop: '1px solid #374151', paddingTop: '30px', textAlign: 'center', color: '#9ca3af' }}>
+                        <p>© 2025 Dr. Kalicharan P. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
