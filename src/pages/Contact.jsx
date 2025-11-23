@@ -4,7 +4,7 @@ import AppointmentScheduler from '../components/AppointmentScheduler';
 const Contact = () => {
     return (
         <div className="container section-padding">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: 'clamp(30px, 5vw, 60px)', alignItems: 'start' }}>
                 <div>
                     <h1 className="heading-lg">Get in Touch</h1>
                     <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '40px' }}>
