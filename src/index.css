@@ -429,3 +429,36 @@ button {
     font-size: 1rem !important;
   }
 }
+
+/* Form Elements Dark Mode */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-light) !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Dark mode for time slot buttons */
+[data-theme="dark"] button[type="button"] {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] button[type="button"]:disabled {
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  color: var(--text-light) !important;
+}
