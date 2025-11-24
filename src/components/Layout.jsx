@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Layout = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { currentUser, logout } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [darkMode, setDarkMode] = useState(() => {
         // Check if it's nighttime (6 PM to 6 AM)
@@ -59,6 +62,16 @@ const Layout = () => {
 
     const closeMobileMenu = () => {
         setMobileMenuOpen(false);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/login');
+            closeMobileMenu();
+        } catch (error) {
+            console.error("Failed to log out", error);
+        }
     };
 
     return (
@@ -120,6 +133,23 @@ const Layout = () => {
                                     </li>
                                 );
                             })}
+
+                            {/* Auth Buttons */}
+                            {currentUser ? (
+                                <>
+                                    <li>
+                                        <Link to="/dashboard" className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '0.9rem' }}>
+                                            Dashboard
+                                        </Link>
+                                    </li>
+                                </>
+                            ) : (
+                                <li>
+                                    <Link to="/login" className="btn" style={{ padding: '8px 20px', fontSize: '0.9rem', border: '1px solid var(--primary-color)', color: 'var(--primary-color)', background: 'transparent' }}>
+                                        Login
+                                    </Link>
+                                </li>
+                            )}
                         </ul>
                     </nav>
 
@@ -206,6 +236,68 @@ const Layout = () => {
                                 </li>
                             );
                         })}
+
+                        {/* Mobile Auth Links */}
+                        {currentUser ? (
+                            <>
+                                <li style={{ marginBottom: '20px' }}>
+                                    <Link
+                                        to="/dashboard"
+                                        onClick={closeMobileMenu}
+                                        style={{
+                                            display: 'block',
+                                            padding: '15px 20px',
+                                            color: 'var(--primary-color)',
+                                            fontWeight: '600',
+                                            fontSize: '1.1rem',
+                                            backgroundColor: 'white',
+                                            borderRadius: '12px',
+                                            textAlign: 'center'
+                                        }}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                </li>
+                                <li style={{ marginBottom: '20px' }}>
+                                    <button
+                                        onClick={handleLogout}
+                                        style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: '15px 20px',
+                                            color: 'white',
+                                            fontWeight: '600',
+                                            fontSize: '1.1rem',
+                                            backgroundColor: 'rgba(255,0,0,0.2)',
+                                            border: '1px solid rgba(255,255,255,0.3)',
+                                            borderRadius: '12px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Log Out
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <li style={{ marginBottom: '20px' }}>
+                                <Link
+                                    to="/login"
+                                    onClick={closeMobileMenu}
+                                    style={{
+                                        display: 'block',
+                                        padding: '15px 20px',
+                                        color: 'var(--primary-color)',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                        backgroundColor: 'white',
+                                        borderRadius: '12px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Login
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </nav>
             </div>
