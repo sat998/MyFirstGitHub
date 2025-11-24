@@ -123,32 +123,6 @@ const Layout = () => {
                         </ul>
                     </nav>
 
-                    {/* Dark Mode Toggle */}
-                    <button
-                        onClick={toggleDarkMode}
-                        className="dark-mode-toggle"
-                        style={{
-                            background: 'rgba(255, 255, 255, 0.2)',
-                            border: '1px solid rgba(255, 255, 255, 0.3)',
-                            borderRadius: '50%',
-                            width: '40px',
-                            height: '40px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '1.2rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            backdropFilter: 'blur(10px)',
-                            WebkitBackdropFilter: 'blur(10px)'
-                        }}
-                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                        aria-label="Toggle dark mode"
-                    >
-                        {darkMode ? '☀️' : '🌙'}
-                    </button>
-
                     {/* Mobile Hamburger Button */}
                     <button
                         className="mobile-menu-btn"
@@ -252,6 +226,44 @@ const Layout = () => {
                     }}
                 />
             )}
+
+            {/* Floating Dark Mode Toggle */}
+            <button
+                onClick={toggleDarkMode}
+                className="dark-mode-toggle-floating"
+                style={{
+                    position: 'fixed',
+                    bottom: '30px',
+                    right: '30px',
+                    background: 'linear-gradient(135deg, var(--primary-color), var(--primary-dark))',
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '50%',
+                    width: '56px',
+                    height: '56px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    zIndex: 1000
+                }}
+                onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+                }}
+                aria-label="Toggle dark mode"
+                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+                {darkMode ? '☀️' : '🌙'}
+            </button>
 
             <main>
                 <Outlet />
