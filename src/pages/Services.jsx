@@ -11,26 +11,26 @@ const Services = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
                 {/* Pulmonology Section */}
-                <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-                    <div style={{ backgroundColor: '#e0f7fa', padding: '30px', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
+                    <div style={{ background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(13, 148, 136, 0.05))', padding: '30px', textAlign: 'center' }}>
                         <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🫁</div>
                         <h2 style={{ color: 'var(--primary-color)' }}>Pulmonology</h2>
                     </div>
                     <div style={{ padding: '30px' }}>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Asthma Management
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> COPD Treatment
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Respiratory Infections
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Allergy Testing
                             </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Lung Function Tests
                             </li>
                         </ul>
@@ -38,26 +38,26 @@ const Services = () => {
                 </div>
 
                 {/* Pediatrics Section */}
-                <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-                    <div style={{ backgroundColor: '#fff3e0', padding: '30px', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
+                    <div style={{ background: 'linear-gradient(135deg, rgba(245, 124, 0, 0.1), rgba(245, 124, 0, 0.05))', padding: '30px', textAlign: 'center' }}>
                         <div style={{ fontSize: '3rem', marginBottom: '10px' }}>👶</div>
-                        <h2 style={{ color: '#f57c00' }}>Pediatrics</h2>
+                        <h2 style={{ color: 'var(--secondary-color)' }}>Pediatrics</h2>
                     </div>
                     <div style={{ padding: '30px' }}>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Newborn Care
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Vaccinations & Immunizations
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Growth & Development Monitoring
                             </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid #f1f3f5', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Common Childhood Illnesses
                             </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center' }}>
+                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
                                 <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Nutritional Guidance
                             </li>
                         </ul>
