@@ -5,10 +5,16 @@ const Layout = () => {
     const location = useLocation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [darkMode, setDarkMode] = useState(() => {
-        // Check localStorage or system preference
+        // Check if it's nighttime (6 PM to 6 AM)
+        const hour = new Date().getHours();
+        const isNightTime = hour >= 18 || hour < 6;
+
+        // Check localStorage for manual override
         const saved = localStorage.getItem('darkMode');
         if (saved !== null) return saved === 'true';
-        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // Default to time-based
+        return isNightTime;
     });
 
     useEffect(() => {
@@ -20,10 +26,31 @@ const Layout = () => {
         }
         // Save preference
         localStorage.setItem('darkMode', darkMode);
+
+        // Set up interval to check time every minute
+        const interval = setInterval(() => {
+            const hour = new Date().getHours();
+            const isNightTime = hour >= 18 || hour < 6;
+
+            // Only auto-switch if user hasn't manually toggled recently
+            const lastManualToggle = localStorage.getItem('lastManualToggle');
+            const now = Date.now();
+
+            // If no manual toggle in last 2 hours, auto-switch based on time
+            if (!lastManualToggle || (now - parseInt(lastManualToggle)) > 2 * 60 * 60 * 1000) {
+                if (isNightTime !== darkMode) {
+                    setDarkMode(isNightTime);
+                }
+            }
+        }, 60000); // Check every minute
+
+        return () => clearInterval(interval);
     }, [darkMode]);
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
+        // Mark that user manually toggled (prevents auto-switch for 2 hours)
+        localStorage.setItem('lastManualToggle', Date.now().toString());
     };
 
     const toggleMobileMenu = () => {
