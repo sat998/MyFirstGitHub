@@ -92,11 +92,11 @@ const Layout = () => {
                     borderRadius: 'var(--radius-full)'
                 }}>
                     <div className="logo" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '2rem' }}>🩺</span>
+                        <span style={{ fontSize: '2rem' }}>🏥</span>
                         <div>
-                            Dr. Kalicharan P
+                            Happy Clinic
                             <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500', letterSpacing: '0.05em' }}>
-                                PULMONOLOGIST & PEDIATRICIAN
+                                MULTI-SPECIALITY CARE
                             </span>
                         </div>
                     </div>
@@ -104,8 +104,11 @@ const Layout = () => {
                     {/* Desktop Navigation */}
                     <nav className="nav desktop-nav">
                         <ul style={{ display: 'flex', gap: '40px', listStyle: 'none', alignItems: 'center' }}>
-                            {['Home', 'About', 'Services', 'Contact'].map((item) => {
-                                const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
+                            {['Home', 'About', 'Services', 'Specialists', 'Contact'].map((item) => {
+                                let path;
+                                if (item === 'Home') path = '/';
+                                else if (item === 'Specialists') path = '/#doctors';
+                                else path = `/${item.toLowerCase()}`;
                                 const isActive = location.pathname === path;
                                 return (
                                     <li key={item}>
@@ -212,8 +215,11 @@ const Layout = () => {
                 </button>
                 <nav>
                     <ul style={{ listStyle: 'none', padding: 0 }}>
-                        {['Home', 'About', 'Services', 'Contact'].map((item) => {
-                            const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
+                        {['Home', 'About', 'Services', 'Specialists', 'Contact'].map((item) => {
+                            let path;
+                            if (item === 'Home') path = '/';
+                            else if (item === 'Specialists') path = '/#doctors';
+                            else path = `/${item.toLowerCase()}`;
                             const isActive = location.pathname === path;
                             return (
                                 <li key={item} style={{ marginBottom: '20px' }}>
@@ -370,9 +376,9 @@ const Layout = () => {
                 <div className="container">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px', marginBottom: '40px' }}>
                         <div>
-                            <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary-light)' }}>Dr. Kalicharan P</h3>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary-light)' }}>Happy Clinic</h3>
                             <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
-                                Providing expert Pulmonology and Pediatric care in Salem, Tamil Nadu.
+                                Providing expert Multi-Speciality care in Salem, Tamil Nadu.
                             </p>
                         </div>
                         <div>
@@ -391,13 +397,13 @@ const Layout = () => {
                             <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Contact</h4>
                             <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
                                 📍 Salem, Tamil Nadu<br />
-                                📧 drkalicharan@clinic.com<br />
+                                📧 contact@happyclinic.com<br />
                                 📞 +91 98765 43210
                             </p>
                         </div>
                     </div>
                     <div style={{ borderTop: '1px solid #374151', paddingTop: '30px', textAlign: 'center', color: '#9ca3af' }}>
-                        <p>© 2025 Dr. Kalicharan P. All rights reserved.</p>
+                        <p>© 2025 Happy Clinic. All rights reserved.</p>
                     </div>
                 </div>
             </footer>

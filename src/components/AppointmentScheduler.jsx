@@ -3,6 +3,7 @@ import { db } from '../utils/firebase';
 import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import { CLINIC_LOCATIONS, isClinicOpen, TIME_SLOTS } from '../utils/holidays';
+import { DOCTORS } from '../utils/doctors';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 const AppointmentScheduler = () => {
     const { currentUser } = useAuth();
     const [location, setLocation] = useState('');
+    const [selectedDoctor, setSelectedDoctor] = useState('');
     const [date, setDate] = useState(null);
     const [status, setStatus] = useState(null);
     const [formData, setFormData] = useState({ name: '', phone: '', reason: '' });
@@ -29,15 +31,16 @@ const AppointmentScheduler = () => {
     }, [currentUser]);
 
     useEffect(() => {
-        if (date && location) {
+        if (date && location && selectedDoctor) {
             // Format date to YYYY-MM-DD for Firestore query
             const formattedDate = date.toISOString().split('T')[0];
 
-            // Real-time listener for booked slots (filtered by date AND location)
+            // Real-time listener for booked slots (filtered by date, location AND doctor)
             const q = query(
                 collection(db, "appointments"),
                 where("date", "==", formattedDate),
-                where("location", "==", location)
+                where("location", "==", location),
+                where("doctorId", "==", selectedDoctor)
             );
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 const slots = [];
@@ -52,10 +55,17 @@ const AppointmentScheduler = () => {
             });
             return () => unsubscribe();
         }
-    }, [date, location]);
+    }, [date, location, selectedDoctor]);
 
     const isDateAvailable = (date) => {
         const day = date.getDay(); // 0 = Sunday, 1 = Monday, ...
+
+        // Block past dates (compare dates at midnight to ignore time)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+        if (checkDate < today) return false;
 
         // Always block Sundays (0)
         if (day === 0) return false;
@@ -101,12 +111,15 @@ const AppointmentScheduler = () => {
 
         try {
             const formattedDate = date.toISOString().split('T')[0];
+            const doctor = DOCTORS.find(d => d.id === selectedDoctor);
 
             // 1. Save to Firebase
             await addDoc(collection(db, "appointments"), {
                 date: formattedDate,
                 location,
                 slot: selectedSlot,
+                doctorId: selectedDoctor,
+                doctorName: doctor?.name,
                 ...formData,
                 userId: currentUser ? currentUser.uid : null, // Save userId if logged in
                 createdAt: new Date()
@@ -118,10 +131,10 @@ const AppointmentScheduler = () => {
                 'service_2ptkq4x',
                 'template_yk6ftoh',
                 {
-                    to_name: 'Dr. Kalicharan P',
+                    to_name: doctor?.name || 'Doctor',
                     from_name: formData.name,
-                    message: `New appointment request\n\nLocation: ${locationName}\nDate: ${formattedDate}\nTime: ${selectedSlot}\nPhone: ${formData.phone}\nReason: ${formData.reason}`,
-                    reply_to: 'sat998@gmail.com'
+                    message: `New appointment request for ${doctor?.name}\n\nLocation: ${locationName}\nDate: ${formattedDate}\nTime: ${selectedSlot}\nPhone: ${formData.phone}\nReason: ${formData.reason}`,
+                    reply_to: 'sat998@gmail.com' // Ideally this should be dynamic or admin email
                 },
                 '4MX1QNdStuiJl3xZ7'
             );
@@ -132,14 +145,14 @@ const AppointmentScheduler = () => {
                 'template_yk6ftoh',
                 {
                     to_name: formData.name,
-                    from_name: 'Dr. Kalicharan P Clinic',
-                    message: `Your appointment is confirmed!\n\nLocation: ${locationName} Clinic\nDate: ${formattedDate}\nTime: ${selectedSlot}\n\nWe look forward to seeing you!\n\nFor any changes, please call: +91 98765 43210`,
+                    from_name: `${doctor?.name} Clinic`,
+                    message: `Your appointment with ${doctor?.name} is confirmed!\n\nLocation: ${locationName} Clinic\nDate: ${formattedDate}\nTime: ${selectedSlot}\n\nWe look forward to seeing you!\n\nFor any changes, please call: +91 98765 43210`,
                     reply_to: formData.phone || 'noreply@clinic.com'
                 },
                 '4MX1QNdStuiJl3xZ7'
             );
 
-            console.log('Appointment booked:', { date: formattedDate, slot: selectedSlot, ...formData });
+            console.log('Appointment booked:', { date: formattedDate, slot: selectedSlot, doctor: doctor?.name, ...formData });
             setSubmitted(true);
         } catch (error) {
             console.error("Error booking appointment:", error);
@@ -161,6 +174,7 @@ const AppointmentScheduler = () => {
                     setSubmitted(false);
                     setFormData({ name: '', phone: '', reason: '' });
                     setLocation('');
+                    setSelectedDoctor('');
                     setDate(null);
                     setSelectedSlot(null);
                 }}>Book Another</button>
@@ -171,17 +185,17 @@ const AppointmentScheduler = () => {
     return (
         <div className="glass-panel animate-slide-up" style={{ padding: '40px' }}>
             <h2 className="heading-md" style={{ color: 'var(--primary-color)', fontSize: '2rem' }}>Book Appointment</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>Select a date and time slot.</p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>Select a doctor, location, and time slot.</p>
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Select Clinic Location
+                        Select Doctor
                     </label>
                     <select
-                        id="clinic-location"
-                        value={location}
-                        onChange={handleLocationChange}
+                        id="doctor-select"
+                        value={selectedDoctor}
+                        onChange={(e) => setSelectedDoctor(e.target.value)}
                         style={{
                             width: '100%',
                             padding: '16px',
@@ -193,6 +207,41 @@ const AppointmentScheduler = () => {
                             outline: 'none',
                             boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
                             cursor: 'pointer'
+                        }}
+                        onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                        onBlur={(e) => e.target.style.borderColor = 'transparent'}
+                        required
+                    >
+                        <option value="">-- Choose Specialist --</option>
+                        {DOCTORS.map(doc => (
+                            <option key={doc.id} value={doc.id}>
+                                {doc.name} - {doc.specialization}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Select Clinic Location
+                    </label>
+                    <select
+                        id="clinic-location"
+                        value={location}
+                        onChange={handleLocationChange}
+                        disabled={!selectedDoctor}
+                        style={{
+                            width: '100%',
+                            padding: '16px',
+                            borderRadius: 'var(--radius-md)',
+                            border: '2px solid transparent',
+                            backgroundColor: 'rgba(255,255,255,0.8)',
+                            fontSize: '1rem',
+                            transition: 'all 0.3s ease',
+                            outline: 'none',
+                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                            cursor: selectedDoctor ? 'pointer' : 'not-allowed',
+                            opacity: selectedDoctor ? 1 : 0.6
                         }}
                         onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
                         onBlur={(e) => e.target.style.borderColor = 'transparent'}
@@ -248,23 +297,59 @@ const AppointmentScheduler = () => {
                             {TIME_SLOTS.map((slot) => {
                                 const isBooked = bookedSlots.includes(slot);
                                 const isSelected = selectedSlot === slot;
+
+                                // Check if slot is in the past
+                                let isPast = false;
+                                if (date) {
+                                    const now = new Date();
+
+                                    // Check if selected date is today
+                                    const isToday = date.toDateString() === now.toDateString();
+
+                                    if (isToday) {
+                                        // Parse slot time
+                                        const [time, modifier] = slot.split(' ');
+                                        let [slotHour, slotMin] = time.split(':').map(Number);
+
+                                        // Convert to 24-hour format
+                                        if (modifier === 'AM' && slotHour === 12) slotHour = 0;
+                                        if (modifier === 'PM' && slotHour !== 12) slotHour += 12;
+
+                                        // Get current hour and minute
+                                        const currentHour = now.getHours();
+                                        const currentMin = now.getMinutes();
+
+                                        // Compare: if slot hour is less than current hour, it's past
+                                        // If same hour, check minutes
+                                        if (slotHour < currentHour) {
+                                            isPast = true;
+                                        } else if (slotHour === currentHour && slotMin <= currentMin) {
+                                            isPast = true;
+                                        }
+                                    }
+                                }
+
+                                const isDisabled = isBooked || isPast;
+
                                 return (
                                     <button
                                         key={slot}
                                         type="button"
-                                        disabled={isBooked}
+                                        disabled={isDisabled}
                                         onClick={() => setSelectedSlot(slot)}
                                         style={{
                                             padding: '10px',
                                             borderRadius: '8px',
                                             border: isSelected ? '2px solid var(--primary-color)' : '1px solid #e5e7eb',
-                                            backgroundColor: isSelected ? 'var(--primary-light)' : (isBooked ? '#f3f4f6' : 'white'),
-                                            color: isSelected ? 'var(--primary-dark)' : (isBooked ? '#9ca3af' : 'var(--text-primary)'),
-                                            cursor: isBooked ? 'not-allowed' : 'pointer',
-                                            opacity: isBooked ? 0.6 : 1,
+                                            backgroundColor: isSelected ? 'var(--primary-light)' : (isDisabled ? '#f3f4f6' : 'white'),
+                                            color: isSelected ? 'var(--primary-dark)' : (isDisabled ? '#9ca3af' : 'var(--text-primary)'),
+                                            cursor: isDisabled ? 'not-allowed' : 'pointer',
+                                            opacity: isDisabled ? 0.6 : 1,
                                             fontWeight: isSelected ? '600' : 'normal',
-                                            transition: 'all 0.2s ease'
+                                            transition: 'all 0.2s ease',
+                                            textDecoration: isPast ? 'line-through' : 'none'
                                         }}
+                                        title={isPast ? "Past time" : (isBooked ? "Already booked" : "Available")}
                                     >
                                         {slot}
                                     </button>

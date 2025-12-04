@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { DOCTORS } from '../utils/doctors';
 
 const Home = () => {
     return (
@@ -36,12 +37,12 @@ const Home = () => {
                             letterSpacing: '0.05em',
                             textTransform: 'uppercase'
                         }}>
-                            Trusted Healthcare for Your Family
+                            Welcome to Happy Clinic
                         </span>
 
                         <h1 className="heading-lg animate-slide-up delay-100">
-                            Expert Care for <br />
-                            <span style={{ color: 'var(--primary-color)' }}>Lungs & Little Ones</span>
+                            Expert Care from <br />
+                            <span style={{ color: 'var(--primary-color)' }}>Our Specialists</span>
                         </h1>
 
                         <p className="animate-slide-up delay-200" style={{
@@ -50,17 +51,40 @@ const Home = () => {
                             marginBottom: '40px',
                             lineHeight: '1.8'
                         }}>
-                            Specialized Pulmonology and Pediatric care delivered with compassion.
-                            Dr. Kalicharan P brings years of experience to ensure the best health for you and your children.
+                            Dedicated to providing the best medical care for you and your loved ones.
+                            Specializing in Pulmonology, Pediatrics, General Medicine, and Orthopedics.
                         </p>
 
-                        <div className="animate-slide-up delay-300" style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <div className="animate-slide-up delay-300" style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '60px' }}>
                             <Link to="/contact" className="btn btn-primary" style={{ padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 40px)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
                                 Book Appointment
                             </Link>
                             <Link to="/services" className="btn btn-secondary" style={{ padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 40px)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
                                 View Services
                             </Link>
+                        </div>
+
+                        {/* Doctors List */}
+                        <div id="doctors" className="animate-slide-up delay-400" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', textAlign: 'left' }}>
+                            {DOCTORS.map(doctor => (
+                                <div key={doctor.id} className="glass-panel" style={{ padding: '30px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <div style={{
+                                        width: '80px',
+                                        height: '80px',
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        backgroundColor: 'var(--primary-light)',
+                                        flexShrink: 0
+                                    }}>
+                                        <img src={doctor.image} alt={doctor.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    </div>
+                                    <div>
+                                        <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '5px' }}>{doctor.name}</h3>
+                                        <p style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', marginBottom: '8px' }}>{doctor.specialization}</p>
+                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5' }}>{doctor.description}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

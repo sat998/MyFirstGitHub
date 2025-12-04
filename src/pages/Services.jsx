@@ -63,6 +63,60 @@ const Services = () => {
                         </ul>
                     </div>
                 </div>
+
+                {/* General Medicine Section */}
+                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
+                    <div style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05))', padding: '30px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🩺</div>
+                        <h2 style={{ color: '#3b82f6' }}>General Medicine</h2>
+                    </div>
+                    <div style={{ padding: '30px' }}>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Fever & Flu Treatment
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Diabetes Management
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Hypertension Control
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Preventive Health Checkups
+                            </li>
+                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Lifestyle Counseling
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Orthopedics Section */}
+                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
+                    <div style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05))', padding: '30px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🦴</div>
+                        <h2 style={{ color: '#8b5cf6' }}>Orthopedics</h2>
+                    </div>
+                    <div style={{ padding: '30px' }}>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Joint Pain Management
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Fracture Care
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Arthritis Treatment
+                            </li>
+                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Sports Injuries
+                            </li>
+                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
+                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Physiotherapy Support
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '60px' }}>

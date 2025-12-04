@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../utils/firebase';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
 import { CLINIC_LOCATIONS } from '../utils/holidays';
+import { getDoctorByEmail } from '../utils/doctors';
 
 const Dashboard = () => {
     const { currentUser, logout } = useAuth();
@@ -11,17 +12,23 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // Check if current user is a doctor
+    const currentDoctor = currentUser ? getDoctorByEmail(currentUser.email) : null;
+    const isDoctor = !!currentDoctor;
+
     useEffect(() => {
         const fetchAppointments = async () => {
             if (!currentUser) return;
 
             try {
-                const isDoctor = currentUser.email === 'sat998@gmail.com';
                 let q;
 
                 if (isDoctor) {
-                    // Doctor sees ALL appointments
-                    q = query(collection(db, "appointments"));
+                    // Doctor sees appointments for their ID
+                    q = query(
+                        collection(db, "appointments"),
+                        where("doctorId", "==", currentDoctor.id)
+                    );
                 } else {
                     // Patients see only their own appointments
                     q = query(
@@ -48,7 +55,7 @@ const Dashboard = () => {
         };
 
         fetchAppointments();
-    }, [currentUser]);
+    }, [currentUser, isDoctor, currentDoctor]);
 
     const handleLogout = async () => {
         try {
@@ -59,9 +66,21 @@ const Dashboard = () => {
         }
     };
 
+    const handleCancelAppointment = async (appointmentId) => {
+        if (window.confirm("Are you sure you want to cancel this appointment?")) {
+            try {
+                await deleteDoc(doc(db, "appointments", appointmentId));
+                setAppointments(prev => prev.filter(app => app.id !== appointmentId));
+                alert("Appointment cancelled successfully.");
+            } catch (error) {
+                console.error("Error cancelling appointment:", error);
+                alert("Failed to cancel appointment.");
+            }
+        }
+    };
+
     const upcomingAppointments = appointments.filter(app => new Date(app.date) >= new Date().setHours(0, 0, 0, 0));
     const pastAppointments = appointments.filter(app => new Date(app.date) < new Date().setHours(0, 0, 0, 0));
-    const isDoctor = currentUser?.email === 'sat998@gmail.com';
 
     return (
         <div className="container section-padding" style={{ minHeight: '80vh' }}>
@@ -69,7 +88,7 @@ const Dashboard = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
                     <div>
                         <h2 className="heading-md" style={{ color: 'var(--primary-color)' }}>
-                            {isDoctor ? 'Admin Dashboard' : 'My Dashboard'}
+                            {isDoctor ? `Dr. ${currentDoctor.name.split(' ')[1]} Dashboard` : 'My Dashboard'}
                         </h2>
                         <p style={{ color: 'var(--text-secondary)' }}>
                             Welcome back, <strong>{currentUser?.displayName || currentUser?.email}</strong>
@@ -84,7 +103,7 @@ const Dashboard = () => {
                     // Doctor View - Table with all appointments
                     <div>
                         <h3 className="heading-sm" style={{ marginBottom: '20px', borderBottom: '2px solid var(--primary-light)', paddingBottom: '10px' }}>
-                            All Appointments ({appointments.length})
+                            Your Appointments ({appointments.length})
                         </h3>
                         {loading ? (
                             <p>Loading appointments...</p>
@@ -99,6 +118,7 @@ const Dashboard = () => {
                                             <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Patient</th>
                                             <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Phone</th>
                                             <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Reason</th>
+                                            <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,6 +134,23 @@ const Dashboard = () => {
                                                 <td style={{ padding: '12px', fontWeight: '600' }}>{app.name}</td>
                                                 <td style={{ padding: '12px' }}>{app.phone}</td>
                                                 <td style={{ padding: '12px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{app.reason}</td>
+                                                <td style={{ padding: '12px' }}>
+                                                    <button
+                                                        onClick={() => handleCancelAppointment(app.id)}
+                                                        style={{
+                                                            background: '#fee2e2',
+                                                            color: '#ef4444',
+                                                            border: 'none',
+                                                            padding: '6px 12px',
+                                                            borderRadius: '6px',
+                                                            cursor: 'pointer',
+                                                            fontSize: '0.85rem',
+                                                            fontWeight: '600'
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -121,7 +158,7 @@ const Dashboard = () => {
                             </div>
                         ) : (
                             <div style={{ textAlign: 'center', padding: '40px', background: 'rgba(0,0,0,0.02)', borderRadius: '16px' }}>
-                                <p style={{ color: 'var(--text-secondary)' }}>No appointments yet.</p>
+                                <p style={{ color: 'var(--text-secondary)' }}>No appointments found.</p>
                             </div>
                         )}
                     </div>
@@ -141,6 +178,7 @@ const Dashboard = () => {
                                                 <span style={{ background: 'var(--primary-light)', color: 'var(--primary-dark)', padding: '2px 8px', borderRadius: '12px', fontSize: '0.8rem' }}>{app.slot}</span>
                                             </div>
                                             <h4 style={{ fontSize: '1.1rem', marginBottom: '5px' }}>{CLINIC_LOCATIONS[app.location]?.name || app.location} Clinic</h4>
+                                            {app.doctorName && <p style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>With {app.doctorName}</p>}
                                             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Reason: {app.reason}</p>
                                         </div>
                                     ))}
@@ -164,6 +202,7 @@ const Dashboard = () => {
                                                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{app.slot}</span>
                                             </div>
                                             <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>{CLINIC_LOCATIONS[app.location]?.name || app.location} Clinic</p>
+                                            {app.doctorName && <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{app.doctorName}</p>}
                                         </div>
                                     ))}
                                 </div>
