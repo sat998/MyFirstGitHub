@@ -2,246 +2,114 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
-    const doctors = [
-        {
-            id: 'dr_kalicharan',
-            name: 'Dr. Kalicharan P',
-            qualifications: ['MBBS', 'MD Pulmonologist', 'Dip. in Pediatrics'],
-            specializations: ['Pulmonology', 'Pediatrics'],
-            experience: '15+ Years',
-            emoji: '👨‍⚕️',
-            color: 'var(--primary-color)',
-            gradient: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(13, 148, 136, 0.05))',
-            bio: `Dr. Kalicharan P is a distinguished medical professional with over 15 years of experience 
-                in treating respiratory disorders and pediatric conditions. His dual specialization allows 
-                him to provide comprehensive care for patients of all ages.`,
-            achievements: [
-                'Successfully treated over 10,000+ patients',
-                'Former Senior Consultant at Government Hospital, Salem',
-                'Published research on Pediatric Respiratory Disorders',
-                'Member of Indian Medical Association (IMA)',
-                'Recognized for excellence in patient care by Tamil Nadu Medical Council'
-            ],
-            expertise: [
-                'Chronic Asthma & COPD Management',
-                'Pediatric Pulmonology',
-                'Allergy & Immunology',
-                'Newborn & Child Healthcare',
-                'Vaccination Programs'
-            ]
-        },
-        {
-            id: 'dr_karthik',
-            name: 'Dr. Karthik',
-            qualifications: ['MBBS', 'MS Orthopedics', 'Fellowship in Sports Medicine'],
-            specializations: ['General Medicine', 'Orthopedics'],
-            experience: '12+ Years',
-            emoji: '🦴',
-            color: '#8b5cf6',
-            gradient: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05))',
-            bio: `Dr. Karthik is an expert orthopedic surgeon and general physician with 12+ years of 
-                experience. He specializes in treating musculoskeletal conditions, sports injuries, 
-                and provides comprehensive primary healthcare services.`,
-            achievements: [
-                'Over 5,000+ successful orthopedic treatments',
-                'Fellowship trained in Sports Medicine',
-                'Former Orthopedic Consultant at Apollo Hospitals',
-                'Member of Indian Orthopedic Association',
-                'Expert in minimally invasive joint procedures'
-            ],
-            expertise: [
-                'Joint Replacement Consultation',
-                'Fracture & Trauma Care',
-                'Sports Injury Management',
-                'Arthritis Treatment',
-                'General Health Checkups'
-            ]
-        }
-    ];
-
     return (
-        <div className="container section-padding">
-            {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-                <h1 className="heading-lg">Meet Our Specialists</h1>
-                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', maxWidth: '700px', margin: '0 auto' }}>
-                    Happy Clinic is home to highly qualified medical professionals dedicated to providing
-                    exceptional healthcare in Pulmonology, Pediatrics, General Medicine, and Orthopedics.
-                </p>
-            </div>
+        <div style={{
+            minHeight: 'calc(100vh - 140px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: '20px 0'
+        }}>
+            <div className="container">
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                    <h1 style={{
+                        fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                        fontWeight: '800',
+                        marginBottom: '12px',
+                        color: 'var(--text-primary)'
+                    }}>About Happy Clinic</h1>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '600px', margin: '0 auto' }}>
+                        Dedicated to providing exceptional healthcare with compassion and expertise since 2010.
+                    </p>
+                </div>
 
-            {/* Doctors Grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
-                {doctors.map((doctor) => (
-                    <div
-                        key={doctor.id}
-                        className="glass-panel"
-                        style={{
-                            overflow: 'hidden',
-                            padding: 0
-                        }}
-                    >
-                        {/* Doctor Header */}
-                        <div style={{
-                            background: doctor.gradient,
-                            padding: '40px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '30px',
-                            flexWrap: 'wrap',
-                            justifyContent: 'center'
-                        }}>
-                            <div style={{
-                                width: '120px',
-                                height: '120px',
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '3.5rem',
-                                boxShadow: 'var(--shadow-md)'
-                            }}>
-                                {doctor.emoji}
-                            </div>
-                            <div style={{ textAlign: 'center', flex: 1, minWidth: '250px' }}>
-                                <h2 style={{ color: doctor.color, marginBottom: '10px', fontSize: '1.8rem' }}>
-                                    {doctor.name}
-                                </h2>
-                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
-                                    {doctor.qualifications.map((qual, idx) => (
-                                        <span
-                                            key={idx}
-                                            style={{
-                                                padding: '5px 12px',
-                                                backgroundColor: 'white',
-                                                color: doctor.color,
-                                                borderRadius: '20px',
-                                                fontWeight: '600',
-                                                fontSize: '0.8rem',
-                                                boxShadow: 'var(--shadow-sm)'
-                                            }}
-                                        >
-                                            {qual}
-                                        </span>
-                                    ))}
-                                </div>
-                                <p style={{
-                                    fontSize: '1.1rem',
-                                    fontWeight: '600',
-                                    color: 'var(--text-primary)',
-                                    marginTop: '10px'
-                                }}>
-                                    🏅 {doctor.experience} of Excellence
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Doctor Details */}
-                        <div style={{ padding: '40px' }}>
-                            {/* Bio */}
-                            <p style={{
-                                color: 'var(--text-secondary)',
-                                lineHeight: '1.8',
-                                fontSize: '1.05rem',
-                                marginBottom: '30px',
-                                textAlign: 'center',
-                                maxWidth: '800px',
-                                margin: '0 auto 30px'
-                            }}>
-                                {doctor.bio}
+                {/* Main Content Grid */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))',
+                    gap: '30px',
+                    alignItems: 'center',
+                    marginBottom: '40px'
+                }}>
+                    {/* Left: Mission & Vision */}
+                    <div className="glass-panel" style={{ padding: '30px' }}>
+                        <div style={{ marginBottom: '24px' }}>
+                            <h3 style={{ color: 'var(--primary-color)', marginBottom: '10px', fontSize: '1.2rem' }}>🎯 Our Mission</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                                To deliver accessible, high-quality medical care to our community. We believe in treating patients like family, ensuring comfort, trust, and the best possible health outcomes.
                             </p>
-
-                            {/* Achievements & Expertise */}
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                                gap: '30px'
-                            }}>
-                                {/* Achievements */}
-                                <div>
-                                    <h3 style={{
-                                        color: doctor.color,
-                                        marginBottom: '15px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '10px'
-                                    }}>
-                                        🏆 Achievements & Recognition
-                                    </h3>
-                                    <ul style={{ listStyle: 'none', padding: 0 }}>
-                                        {doctor.achievements.map((achievement, idx) => (
-                                            <li
-                                                key={idx}
-                                                style={{
-                                                    padding: '10px 0',
-                                                    borderBottom: idx < doctor.achievements.length - 1 ? '1px solid var(--glass-border)' : 'none',
-                                                    display: 'flex',
-                                                    alignItems: 'flex-start',
-                                                    gap: '10px',
-                                                    color: 'var(--text-primary)'
-                                                }}
-                                            >
-                                                <span style={{ color: 'var(--success-color)' }}>✓</span>
-                                                {achievement}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Areas of Expertise */}
-                                <div>
-                                    <h3 style={{
-                                        color: doctor.color,
-                                        marginBottom: '15px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '10px'
-                                    }}>
-                                        💊 Areas of Expertise
-                                    </h3>
-                                    <ul style={{ listStyle: 'none', padding: 0 }}>
-                                        {doctor.expertise.map((exp, idx) => (
-                                            <li
-                                                key={idx}
-                                                style={{
-                                                    padding: '10px 0',
-                                                    borderBottom: idx < doctor.expertise.length - 1 ? '1px solid var(--glass-border)' : 'none',
-                                                    display: 'flex',
-                                                    alignItems: 'flex-start',
-                                                    gap: '10px',
-                                                    color: 'var(--text-primary)'
-                                                }}
-                                            >
-                                                <span style={{ color: doctor.color }}>•</span>
-                                                {exp}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
+                        </div>
+                        <div>
+                            <h3 style={{ color: 'var(--primary-color)', marginBottom: '10px', fontSize: '1.2rem' }}>👁️ Our Vision</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                                To be the most trusted healthcare provider in Salem and Attur, known for our expertise in Pulmonology, Pediatrics, and Orthopedics.
+                            </p>
                         </div>
                     </div>
-                ))}
-            </div>
 
-            {/* CTA Section */}
-            <div style={{
-                textAlign: 'center',
-                marginTop: '60px',
-                padding: '40px',
-                background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(139, 92, 246, 0.1))',
-                borderRadius: '16px'
-            }}>
-                <h3 style={{ marginBottom: '15px', color: 'var(--text-primary)' }}>
-                    Ready to Experience Quality Healthcare?
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
-                    Book an appointment with our specialists today.
-                </p>
-                <Link to="/contact" className="btn btn-primary" style={{ padding: '15px 40px', fontSize: '1.1rem' }}>
-                    Book a Consultation
-                </Link>
+                    {/* Right: Why Choose Us */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>👨‍⚕️</div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '5px' }}>Expert Doctors</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Highly qualified specialists</p>
+                        </div>
+                        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>🏥</div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '5px' }}>Modern Facilities</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Advanced medical equipment</p>
+                        </div>
+                        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>💖</div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '5px' }}>Patient First</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Compassionate care always</p>
+                        </div>
+                        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>📍</div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '5px' }}>2 Locations</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Convenient access</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom: Stats & CTA */}
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '20px',
+                    padding: '20px',
+                    backgroundColor: 'var(--primary-light)',
+                    borderRadius: '16px'
+                }}>
+                    <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-dark)' }}>15+</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--primary-dark)', opacity: 0.8 }}>Years Experience</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-dark)' }}>10k+</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--primary-dark)', opacity: 0.8 }}>Happy Patients</div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <Link to="/specialists" className="btn" style={{
+                            backgroundColor: 'white',
+                            color: 'var(--primary-color)',
+                            fontWeight: '600',
+                            padding: '10px 20px',
+                            borderRadius: 'var(--radius-full)'
+                        }}>
+                            Meet Our Team
+                        </Link>
+                        <Link to="/contact" className="btn btn-primary" style={{ padding: '10px 20px' }}>
+                            Book Visit
+                        </Link>
+                    </div>
+                </div>
             </div>
         </div>
     );

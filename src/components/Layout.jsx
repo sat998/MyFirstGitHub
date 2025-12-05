@@ -7,54 +7,36 @@ const Layout = () => {
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [darkMode, setDarkMode] = useState(() => {
-        // Check if it's nighttime (6 PM to 6 AM)
-        const hour = new Date().getHours();
-        const isNightTime = hour >= 18 || hour < 6;
+    const [headerVisible, setHeaderVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
 
-        // Check localStorage for manual override
-        const saved = localStorage.getItem('darkMode');
-        if (saved !== null) return saved === 'true';
-
-        // Default to time-based
-        return isNightTime;
-    });
-
+    // Scroll detection for header hide/show
     useEffect(() => {
-        // Apply theme to document
-        if (darkMode) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
-        // Save preference
-        localStorage.setItem('darkMode', darkMode);
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
 
-        // Set up interval to check time every minute
-        const interval = setInterval(() => {
-            const hour = new Date().getHours();
-            const isNightTime = hour >= 18 || hour < 6;
-
-            // Only auto-switch if user hasn't manually toggled recently
-            const lastManualToggle = localStorage.getItem('lastManualToggle');
-            const now = Date.now();
-
-            // If no manual toggle in last 2 hours, auto-switch based on time
-            if (!lastManualToggle || (now - parseInt(lastManualToggle)) > 2 * 60 * 60 * 1000) {
-                if (isNightTime !== darkMode) {
-                    setDarkMode(isNightTime);
-                }
+            // Always show header at top of page
+            if (currentScrollY < 100) {
+                setHeaderVisible(true);
+                setLastScrollY(currentScrollY);
+                return;
             }
-        }, 60000); // Check every minute
 
-        return () => clearInterval(interval);
-    }, [darkMode]);
+            // Scrolling down - hide header
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                setHeaderVisible(false);
+            }
+            // Scrolling up - show header
+            else if (currentScrollY < lastScrollY) {
+                setHeaderVisible(true);
+            }
 
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-        // Mark that user manually toggled (prevents auto-switch for 2 hours)
-        localStorage.setItem('lastManualToggle', Date.now().toString());
-    };
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [lastScrollY]);
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
@@ -80,7 +62,9 @@ const Layout = () => {
                 position: 'sticky',
                 top: '20px',
                 zIndex: 100,
-                padding: '0 24px'
+                padding: '0 24px',
+                transform: headerVisible ? 'translateY(0)' : 'translateY(-150%)',
+                transition: 'transform 0.3s ease-in-out'
             }}>
                 <div className="glass-panel container" style={{
                     display: 'flex',
@@ -107,7 +91,6 @@ const Layout = () => {
                             {['Home', 'About', 'Services', 'Specialists', 'Contact'].map((item) => {
                                 let path;
                                 if (item === 'Home') path = '/';
-                                else if (item === 'Specialists') path = '/#doctors';
                                 else path = `/${item.toLowerCase()}`;
                                 const isActive = location.pathname === path;
                                 return (
@@ -218,7 +201,6 @@ const Layout = () => {
                         {['Home', 'About', 'Services', 'Specialists', 'Contact'].map((item) => {
                             let path;
                             if (item === 'Home') path = '/';
-                            else if (item === 'Specialists') path = '/#doctors';
                             else path = `/${item.toLowerCase()}`;
                             const isActive = location.pathname === path;
                             return (
@@ -325,88 +307,52 @@ const Layout = () => {
                 />
             )}
 
-            {/* Floating Dark Mode Toggle */}
-            <button
-                onClick={toggleDarkMode}
-                className="dark-mode-toggle-floating"
-                style={{
-                    position: 'fixed',
-                    bottom: '30px',
-                    right: '30px',
-                    background: 'linear-gradient(135deg, var(--primary-color), var(--primary-dark))',
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    borderRadius: '50%',
-                    width: '56px',
-                    height: '56px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.5rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                    zIndex: 1000
-                }}
-                onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.1)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-                }}
-                aria-label="Toggle dark mode"
-                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-                {darkMode ? '☀️' : '🌙'}
-            </button>
-
             <main>
                 <Outlet />
             </main>
 
-            <footer style={{
-                backgroundColor: '#1f2937',
-                color: 'white',
-                padding: '60px 0 30px',
-                marginTop: '100px'
-            }}>
-                <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px', marginBottom: '40px' }}>
-                        <div>
-                            <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary-light)' }}>Happy Clinic</h3>
-                            <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
-                                Providing expert Multi-Speciality care in Salem, Tamil Nadu.
-                            </p>
+            {location.pathname !== '/contact' && (
+                <footer style={{
+                    backgroundColor: '#1f2937',
+                    color: 'white',
+                    padding: '60px 0 30px',
+                    marginTop: '100px'
+                }}>
+                    <div className="container">
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px', marginBottom: '40px' }}>
+                            <div>
+                                <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary-light)' }}>Happy Clinic</h3>
+                                <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
+                                    Providing expert Multi-Speciality care in Salem, Tamil Nadu.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Quick Links</h4>
+                                <ul style={{ listStyle: 'none', padding: 0 }}>
+                                    {['Home', 'About', 'Services', 'Contact'].map(item => (
+                                        <li key={item} style={{ marginBottom: '10px' }}>
+                                            <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} style={{ color: '#9ca3af' }}>
+                                                {item}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Contact</h4>
+                                <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
+                                    📍 Salem, Tamil Nadu<br />
+                                    📧 contact@happyclinic.com<br />
+                                    📞 +91 98765 43210
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Quick Links</h4>
-                            <ul style={{ listStyle: 'none', padding: 0 }}>
-                                {['Home', 'About', 'Services', 'Contact'].map(item => (
-                                    <li key={item} style={{ marginBottom: '10px' }}>
-                                        <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} style={{ color: '#9ca3af' }}>
-                                            {item}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'white' }}>Contact</h4>
-                            <p style={{ color: '#9ca3af', lineHeight: '1.8' }}>
-                                📍 Salem, Tamil Nadu<br />
-                                📧 contact@happyclinic.com<br />
-                                📞 +91 98765 43210
-                            </p>
+                        <div style={{ borderTop: '1px solid #374151', paddingTop: '30px', textAlign: 'center', color: '#9ca3af' }}>
+                            <p>© 2025 Happy Clinic. All rights reserved.</p>
                         </div>
                     </div>
-                    <div style={{ borderTop: '1px solid #374151', paddingTop: '30px', textAlign: 'center', color: '#9ca3af' }}>
-                        <p>© 2025 Happy Clinic. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
+                </footer>
+            )}
         </div>
     );
 };

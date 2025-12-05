@@ -2,127 +2,153 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Services = () => {
+    const services = [
+        { icon: '🫁', name: 'Pulmonology', color: 'var(--primary-color)', items: ['Asthma', 'COPD', 'Allergies', 'Lung Tests'] },
+        { icon: '👶', name: 'Pediatrics', color: 'var(--secondary-color)', items: ['Vaccinations', 'Growth Check', 'Child Care', 'Nutrition'] },
+        { icon: '🩺', name: 'General Medicine', color: '#3b82f6', items: ['Fever/Flu', 'Diabetes', 'BP Control', 'Checkups'] },
+        { icon: '🦴', name: 'Orthopedics', color: '#8b5cf6', items: ['Joint Pain', 'Fractures', 'Arthritis', 'Sports Injury'] }
+    ];
+
     return (
-        <div className="container section-padding">
-            <h1 className="heading-lg text-center">Our Services</h1>
-            <p className="text-center" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '60px', maxWidth: '600px', margin: '0 auto 60px' }}>
-                We offer a wide range of medical services specialized in respiratory health and child care.
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
-                {/* Pulmonology Section */}
-                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
-                    <div style={{ background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(13, 148, 136, 0.05))', padding: '30px', textAlign: 'center' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🫁</div>
-                        <h2 style={{ color: 'var(--primary-color)' }}>Pulmonology</h2>
-                    </div>
-                    <div style={{ padding: '30px' }}>
-                        <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Asthma Management
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> COPD Treatment
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Respiratory Infections
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Allergy Testing
-                            </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Lung Function Tests
-                            </li>
-                        </ul>
-                    </div>
+        <div style={{
+            minHeight: 'calc(100vh - 140px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: '10px 0' // Reduced padding
+        }}>
+            <div className="container">
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <h1 style={{
+                        fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                        fontWeight: '800',
+                        marginBottom: '4px',
+                        background: 'linear-gradient(135deg, var(--text-primary), var(--primary-color))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                    }}>Our Services</h1>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '500px', margin: '0 auto' }}>
+                        Comprehensive healthcare specializing in respiratory health, pediatrics, and orthopedics
+                    </p>
                 </div>
 
-                {/* Pediatrics Section */}
-                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
-                    <div style={{ background: 'linear-gradient(135deg, rgba(245, 124, 0, 0.1), rgba(245, 124, 0, 0.05))', padding: '30px', textAlign: 'center' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>👶</div>
-                        <h2 style={{ color: 'var(--secondary-color)' }}>Pediatrics</h2>
-                    </div>
-                    <div style={{ padding: '30px' }}>
-                        <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Newborn Care
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Vaccinations & Immunizations
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Growth & Development Monitoring
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Common Childhood Illnesses
-                            </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Nutritional Guidance
-                            </li>
-                        </ul>
-                    </div>
+                {/* Services Horizontal List */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row', // Force horizontal
+                    justifyContent: 'center',
+                    gap: '16px',
+                    marginBottom: '24px',
+                    flexWrap: 'nowrap', // Prevent wrapping on desktop
+                    overflowX: 'auto', // Allow scroll on mobile if needed
+                    paddingBottom: '10px' // Space for scrollbar if it appears
+                }}>
+                    {services.map((service, index) => (
+                        <div
+                            key={index}
+                            className="glass-panel"
+                            style={{
+                                padding: '20px',
+                                transition: 'transform 0.3s ease',
+                                cursor: 'default',
+                                flex: '1', // Equal width
+                                minWidth: '220px', // Minimum width for readability
+                                maxWidth: '280px'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        >
+                            {/* Icon & Title */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginBottom: '12px'
+                            }}>
+                                <div style={{
+                                    width: '44px',
+                                    height: '44px',
+                                    backgroundColor: `${service.color}15`,
+                                    borderRadius: '10px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1.6rem'
+                                }}>
+                                    {service.icon}
+                                </div>
+                                <h3 style={{ color: service.color, fontSize: '1rem', fontWeight: '700' }}>
+                                    {service.name}
+                                </h3>
+                            </div>
+
+                            {/* Service Items */}
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                {service.items.map((item, idx) => (
+                                    <span
+                                        key={idx}
+                                        style={{
+                                            padding: '3px 8px',
+                                            backgroundColor: `${service.color}10`,
+                                            color: service.color,
+                                            borderRadius: '6px',
+                                            fontSize: '0.7rem',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        {item}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                {/* General Medicine Section */}
-                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
-                    <div style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05))', padding: '30px', textAlign: 'center' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🩺</div>
-                        <h2 style={{ color: '#3b82f6' }}>General Medicine</h2>
+                {/* Bottom: CTA and Info - Horizontal Row */}
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '20px',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                }}>
+                    {/* Clinic Info */}
+                    <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ fontSize: '1.5rem' }}>🏥</div>
+                        <div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '2px', fontSize: '0.9rem' }}>Two Locations</h4>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
+                                Salem (Mon-Wed) • Attur (Thu-Sat)
+                            </p>
+                        </div>
                     </div>
-                    <div style={{ padding: '30px' }}>
-                        <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Fever & Flu Treatment
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Diabetes Management
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Hypertension Control
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Preventive Health Checkups
-                            </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Lifestyle Counseling
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                {/* Orthopedics Section */}
-                <div className="glass-panel" style={{ overflow: 'hidden', transition: 'transform 0.3s ease' }}>
-                    <div style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05))', padding: '30px', textAlign: 'center' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🦴</div>
-                        <h2 style={{ color: '#8b5cf6' }}>Orthopedics</h2>
+                    {/* Timing Info */}
+                    <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ fontSize: '1.5rem' }}>⏰</div>
+                        <div>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '2px', fontSize: '0.9rem' }}>Clinic Hours</h4>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
+                                10:00 AM - 8:00 PM (Closed Sundays)
+                            </p>
+                        </div>
                     </div>
-                    <div style={{ padding: '30px' }}>
-                        <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Joint Pain Management
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Fracture Care
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Arthritis Treatment
-                            </li>
-                            <li style={{ padding: '10px 0', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Sports Injuries
-                            </li>
-                            <li style={{ padding: '10px 0', display: 'flex', alignItems: 'center', color: 'var(--text-primary)' }}>
-                                <span style={{ color: 'var(--success-color)', marginRight: '10px' }}>✓</span> Physiotherapy Support
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
-            <div style={{ textAlign: 'center', marginTop: '60px' }}>
-                <Link to="/contact" className="btn btn-primary" style={{ padding: '15px 40px', fontSize: '1.1rem' }}>
-                    Book a Consultation
-                </Link>
+                    {/* CTA Button */}
+                    <Link
+                        to="/contact"
+                        className="btn btn-primary"
+                        style={{
+                            padding: '12px 24px',
+                            textAlign: 'center',
+                            fontSize: '0.95rem'
+                        }}
+                    >
+                        Book Consultation →
+                    </Link>
+                </div>
             </div>
         </div>
     );

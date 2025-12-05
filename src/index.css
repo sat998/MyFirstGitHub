@@ -3,79 +3,35 @@
 :root {
   /* Modern Medical Palette */
   --primary-color: #0d9488;
-  /* Teal 600 */
   --primary-dark: #0f766e;
-  /* Teal 700 */
   --primary-light: #ccfbf1;
-  /* Teal 100 */
-
   --secondary-color: #f43f5e;
-  /* Rose 500 (Coral-ish) */
   --secondary-light: #ffe4e6;
-  /* Rose 100 */
-
   --accent-color: #38bdf8;
-  /* Sky 400 */
-
   --background-color: #f0fdfa;
-  /* Very light teal bg */
   --surface-color: #ffffff;
-
-  --text-primary: #111827;
-  /* Gray 900 */
-  --text-secondary: #4b5563;
-  /* Gray 600 */
-  --text-light: #9ca3af;
-  /* Gray 400 */
-
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
   --success-color: #10b981;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
-
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
-
-  /* Shadows & Glass */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: 1px solid rgba(255, 255, 255, 0.5);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
   --backdrop-blur: blur(12px);
-
   --radius-md: 12px;
   --radius-lg: 24px;
   --radius-full: 9999px;
-
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Dark Mode */
-[data-theme="dark"] {
-  --primary-color: #14b8a6;
-  --primary-dark: #0d9488;
-  --primary-light: #134e4a;
-
-  --secondary-color: #fb7185;
-  --secondary-light: #4c1d24;
-
-  --accent-color: #38bdf8;
-
-  --background-color: #0f172a;
-  --surface-color: #1e293b;
-
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-light: #64748b;
-
-  --success-color: #34d399;
-  --error-color: #f87171;
-  --warning-color: #fbbf24;
 }
 
 * {
@@ -86,17 +42,117 @@
 
 body {
   font-family: var(--font-body);
-  background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #fef3c7 100%);
+  background: linear-gradient(135deg, #fef7ed 0%, #fef3e2 30%, #e0f2fe 70%, #dbeafe 100%);
+  background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  background-attachment: fixed;
   min-height: 100vh;
   transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
 }
 
-[data-theme="dark"] body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+/* Soft organic blob shapes - warm theme */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  right: -10%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(ellipse at center,
+      rgba(254, 215, 170, 0.25) 0%,
+      rgba(253, 186, 116, 0.12) 30%,
+      rgba(251, 146, 60, 0.04) 50%,
+      transparent 70%);
+  border-radius: 50% 40% 60% 50%;
+  filter: blur(40px);
+  z-index: -1;
+  animation: float-blob1 20s ease-in-out infinite;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 40%;
+  left: -15%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(ellipse at center,
+      rgba(186, 230, 253, 0.25) 0%,
+      rgba(125, 211, 252, 0.12) 35%,
+      rgba(56, 189, 248, 0.04) 55%,
+      transparent 70%);
+  border-radius: 60% 40% 50% 60%;
+  filter: blur(50px);
+  z-index: -1;
+  animation: float-blob2 25s ease-in-out infinite;
+}
+
+#root::before {
+  content: '';
+  position: fixed;
+  bottom: -10%;
+  right: 20%;
+  width: 45%;
+  height: 50%;
+  background: radial-gradient(ellipse at center,
+      rgba(153, 246, 228, 0.15) 0%,
+      rgba(94, 234, 212, 0.08) 40%,
+      transparent 65%);
+  border-radius: 45% 55% 50% 50%;
+  filter: blur(45px);
+  z-index: -1;
+  animation: float-blob3 22s ease-in-out infinite;
+}
+
+@keyframes float-blob1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: translate(-5%, 10%) rotate(5deg) scale(1.05);
+  }
+
+  50% {
+    transform: translate(5%, -5%) rotate(-3deg) scale(0.95);
+  }
+
+  75% {
+    transform: translate(-3%, -8%) rotate(2deg) scale(1.02);
+  }
+}
+
+@keyframes float-blob2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  33% {
+    transform: translate(8%, -6%) rotate(-4deg) scale(1.03);
+  }
+
+  66% {
+    transform: translate(-4%, 8%) rotate(3deg) scale(0.97);
+  }
+}
+
+@keyframes float-blob3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(6%, -10%) scale(1.04);
+  }
 }
 
 h1,
@@ -107,6 +163,7 @@ h5,
 h6 {
   font-family: var(--font-heading);
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 a {
@@ -130,40 +187,14 @@ button {
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 8px 32px 0 rgba(31, 38, 135, 0.1),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-lg);
   position: relative;
   overflow: hidden;
-}
-
-.glass-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.8),
-      transparent);
-  opacity: 0.5;
-}
-
-[data-theme="dark"] .glass-panel {
-  background: rgba(30, 41, 59, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 8px 32px 0 rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-    0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .btn {
@@ -178,59 +209,35 @@ button {
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s;
-}
-
-.btn:hover::before {
-  left: 100%;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg,
-      rgba(13, 148, 136, 0.9),
-      rgba(15, 118, 110, 0.9));
+  background: linear-gradient(135deg, #0d9488, #0891b2);
   color: white;
-  box-shadow:
-    0 4px 12px rgba(13, 148, 136, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+  border: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 8px 20px rgba(13, 148, 136, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.9);
   color: var(--primary-color);
-  border: 1px solid rgba(13, 148, 136, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary:hover {
-  background: rgba(13, 148, 136, 0.1);
+  background: rgba(255, 255, 255, 1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.15);
 }
 
 .section-padding {
-  padding: 100px 0;
+  padding: 80px 0;
 }
 
 .text-center {
@@ -241,9 +248,10 @@ button {
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  background: linear-gradient(135deg, #0d9488, #0891b2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .heading-md {
@@ -302,7 +310,6 @@ button {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Staggered delays */
 .delay-100 {
   animation-delay: 0.1s;
 }
@@ -337,66 +344,6 @@ button {
     padding: 12px 24px;
     font-size: 0.9rem;
   }
-
-  .glass-panel {
-    padding: 24px !important;
-  }
-
-  /* Mobile Navigation */
-  header {
-    padding: 0 12px !important;
-    top: 10px !important;
-  }
-
-  header .glass-panel {
-    padding: 0 20px !important;
-    height: auto !important;
-    min-height: 50px;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
-    margin-top: 10px !important;
-  }
-
-  .logo {
-    font-size: 1rem !important;
-    gap: 6px !important;
-  }
-
-  .logo span:first-child {
-    font-size: 1.3rem !important;
-  }
-
-  .logo div {
-    line-height: 1.3;
-  }
-
-  .logo div span {
-    font-size: 0.6rem !important;
-    margin-top: 2px;
-  }
-
-  .nav ul {
-    gap: 20px !important;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .nav ul li a {
-    font-size: 0.9rem;
-  }
-
-  /* Show hamburger, hide desktop nav on mobile */
-  .desktop-nav {
-    display: none !important;
-  }
-
-  .mobile-menu-btn {
-    display: block !important;
-    position: absolute !important;
-    right: 20px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-  }
 }
 
 @media (max-width: 480px) {
@@ -415,100 +362,43 @@ button {
   .container {
     padding: 0 12px;
   }
-
-  /* Extra small screens */
-  .nav ul {
-    gap: 12px !important;
-  }
-
-  .nav ul li a {
-    font-size: 0.85rem;
-  }
-
-  .logo {
-    font-size: 1rem !important;
-  }
 }
 
-/* Form Elements Dark Mode */
-[data-theme="dark"] input,
-[data-theme="dark"] select,
-[data-theme="dark"] textarea {
-  background-color: rgba(30, 41, 59, 0.6) !important;
-  color: var(--text-primary) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-[data-theme="dark"] input::placeholder,
-[data-theme="dark"] textarea::placeholder {
-  color: var(--text-light) !important;
-}
-
-[data-theme="dark"] input:focus,
-[data-theme="dark"] select:focus,
-[data-theme="dark"] textarea:focus {
-  background-color: rgba(30, 41, 59, 0.8) !important;
-  border-color: var(--primary-color) !important;
-}
-
-/* Dark mode for time slot buttons */
-[data-theme="dark"] button[type="button"] {
-  background-color: rgba(30, 41, 59, 0.6) !important;
-  color: var(--text-primary) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-[data-theme="dark"] button[type="button"]:disabled {
-  background-color: rgba(15, 23, 42, 0.4) !important;
-  color: var(--text-light) !important;
-}
-
-/* React Datepicker Custom Styles */
-.custom-datepicker-wrapper {
-  width: 100%;
-}
-
+/* Form Elements */
 .glass-input {
   width: 100%;
   padding: 16px;
   border-radius: var(--radius-md);
   border: 2px solid transparent;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   transition: all 0.3s ease;
   outline: none;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
 }
 
 .glass-input:focus {
   border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
 }
 
-/* Dark Mode Input */
-[data-theme="dark"] .glass-input {
-  background-color: rgba(30, 41, 59, 0.6) !important;
-  color: var(--text-primary) !important;
-  border-color: rgba(255, 255, 255, 0.1);
+.glass-input::placeholder {
+  color: var(--text-light);
 }
 
-[data-theme="dark"] .glass-input:focus {
-  background-color: rgba(30, 41, 59, 0.8) !important;
-  border-color: var(--primary-color) !important;
-}
-
-/* Datepicker Popup Customization */
+/* React Datepicker Custom Styles */
 .react-datepicker {
   font-family: 'Inter', sans-serif !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
   border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12) !important;
   overflow: hidden;
 }
 
 .react-datepicker__header {
-  background-color: rgba(13, 148, 136, 0.1) !important;
+  background-color: rgba(13, 148, 136, 0.08) !important;
   border-bottom: 1px solid rgba(13, 148, 136, 0.1) !important;
   padding-top: 15px !important;
 }
@@ -551,50 +441,8 @@ button {
 .react-datepicker__day--disabled {
   color: #ccc !important;
   opacity: 0.5 !important;
-  cursor: not-allowed !important;
-}
-
-/* Dark Mode Datepicker */
-[data-theme="dark"] .react-datepicker {
-  background: rgba(30, 41, 59, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-[data-theme="dark"] .react-datepicker__header {
-  background-color: rgba(13, 148, 136, 0.2) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-[data-theme="dark"] .react-datepicker__current-month {
-  color: var(--primary-light) !important;
-}
-
-[data-theme="dark"] .react-datepicker__day-name {
-  color: var(--text-light) !important;
-}
-
-[data-theme="dark"] .react-datepicker__day {
-  color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] .react-datepicker__day:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-}
-
-[data-theme="dark"] .react-datepicker__day--selected {
-  background-color: var(--primary-color) !important;
-  color: white !important;
-}
-
-[data-theme="dark"] .react-datepicker__day--disabled {
-  color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .react-datepicker__navigation-icon::before {
   border-color: var(--text-secondary) !important;
-}
-
-[data-theme="dark"] .react-datepicker__navigation-icon::before {
-  border-color: var(--text-light) !important;
 }
